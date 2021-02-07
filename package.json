@@ -1,0 +1,20 @@
+{
+    "name": "linux",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "dev": "nodemon src/index.ts",
+        "start": "pm2 start src/index.ts",
+        "test": "nodemon src/test.ts"
+    },
+    "keywords": [],
+    "author": "im-lonely <cursors.dev@gmail.com>",
+    "license": "MIT",
+    "dependencies": {
+        "@aeroware/aeroclient": "^1.9.7",
+        "@aeroware/discord-utils": "^1.2.2",
+        "discord.js": "^12.5.1",
+        "dotenv": "^8.2.0"
+    }
+}
