@@ -13,6 +13,7 @@ const prefix = ">>";
                 token: process.env.TOKEN,
                 prefix,
                 commandsPath: "commands",
+                eventsPath: "events",
                 logging: true,
                 responses: {
                     usage: `${prefix}$COMMAND $USAGE`,
@@ -26,7 +27,7 @@ const prefix = ">>";
         );
 
         client.use(({ message }, next) => {
-            if (!message.guild || !message.member.hasPermission("ADMINISTRATOR"))
+            if (!message.guild || !message.member!.hasPermission("ADMINISTRATOR"))
                 return next(true);
         });
     } catch (e) {
