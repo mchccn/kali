@@ -20,7 +20,7 @@ const options: {
     },
     "--silent": {
         alias: "-s",
-        message: "Kicks users silently; does not DM them or displays result",
+        message: "Kicks users silently; does not DM them or displays output",
     },
     "--soft": {
         alias: "-S",
@@ -44,7 +44,7 @@ export default {
     name: "kick",
     args: true,
     usage: "[options] <arguments>",
-    async callback(this: Command, { message, args, client }) {
+    async callback(this: Command, { message, args, client, locale, text }) {
         const flags = getFlags(args);
         const flagNames = flags.map((f) => f.flag);
         const booleanFlags = new Set(
@@ -54,11 +54,8 @@ export default {
         const members: GuildMember[] = [];
 
         for (const arg of args) {
-            if (/^<@!?\d{18}>$/.test(arg)) {
+            if (/\d{18}/.test(arg)) {
                 const member = message.guild!.members.cache.get(arg.match(/(\d{18})/)![0]);
-                if (member && member.id !== client.user?.id) members.push(member);
-            } else if (/^\d{18}$/.test(arg)) {
-                const member = message.guild!.members.cache.get(arg);
                 if (member && member.id !== client.user?.id) members.push(member);
             } else break;
         }
@@ -155,11 +152,6 @@ ${prefix}${this.name}
         await Promise.all(
             members.map(async (m, i) => {
                 try {
-                    if (!booleanFlags.has("-d")) await m.kick(reason);
-
-                    if (booleanFlags.has("-S")) {
-                    }
-
                     if (!booleanFlags.has("-s"))
                         try {
                             const dm = await m.createDM(true);
@@ -187,6 +179,19 @@ ${prefix}${this.name}
                                 `Could not send DM to **${m.user.tag}**`
                             );
                         }
+
+                    if (!booleanFlags.has("-d")) await m.kick(reason);
+
+                    if (booleanFlags.has("-S")) {
+                        await message.guild?.members.unban(m.user);
+                        client.commands.get("clear")?.callback({
+                            message,
+                            args: ["100", "-u", m.id],
+                            client,
+                            locale,
+                            text,
+                        });
+                    }
                 } catch {
                     members.splice(i, 1);
                     if (!booleanFlags.has("-s"))
@@ -195,7 +200,7 @@ ${prefix}${this.name}
             })
         );
 
-        if (!members.length) return;
+        if (!members.length) return message.channel.send(`Could not find any users to kick`);
 
         if (booleanFlags.has("-s")) return;
 

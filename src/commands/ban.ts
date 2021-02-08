@@ -20,7 +20,7 @@ const options: {
     },
     "--silent": {
         alias: "-s",
-        message: "Bans users silently; does not DM them or displays result",
+        message: "Bans users silently; does not DM them or displays output",
     },
     "--soft": {
         alias: "-S",
@@ -44,7 +44,7 @@ export default {
     name: "ban",
     args: true,
     usage: "[options] <arguments>",
-    async callback(this: Command, { message, args, client }) {
+    async callback(this: Command, { message, args, client, locale, text }) {
         const flags = getFlags(args);
         const flagNames = flags.map((f) => f.flag);
         const booleanFlags = new Set(
@@ -54,11 +54,8 @@ export default {
         const members: GuildMember[] = [];
 
         for (const arg of args) {
-            if (/^<@!?\d{18}>$/.test(arg)) {
+            if (/\d{18}/.test(arg)) {
                 const member = message.guild!.members.cache.get(arg.match(/(\d{18})/)![0]);
-                if (member && member.id !== client.user?.id) members.push(member);
-            } else if (/^\d{18}$/.test(arg)) {
-                const member = message.guild!.members.cache.get(arg);
                 if (member && member.id !== client.user?.id) members.push(member);
             } else break;
         }
@@ -151,21 +148,18 @@ ${prefix}${this.name}
                 )
                 .filter((arg) => !/--?\w+/.test(arg))
                 .join(" ") || "No reason specified";
+
         await Promise.all(
             members.map(async (m, i) => {
                 try {
-                    if (!booleanFlags.has("-d")) await m.ban({ reason });
-
-                    if (booleanFlags.has("-S")) await message.guild?.members.unban(m.user);
-
                     if (!booleanFlags.has("-s"))
                         try {
                             const dm = await m.createDM(true);
                             await client.users.cache.get(m.id)?.createDM();
                             await dm.send(
-                                `You have been banned from **${
-                                    message.guild?.name
-                                }** for \`${reason}\`${
+                                `You have been ${
+                                    booleanFlags.has("-S") ? "soft" : ""
+                                }banned from **${message.guild?.name}** for \`${reason}\`${
                                     booleanFlags.has("-H")
                                         ? `\n**${message.author.tag}**'s comment: ${args
                                               .slice(
@@ -179,13 +173,27 @@ ${prefix}${this.name}
                                         : ""
                                 }`.slice(0, 2000)
                             );
-                        } catch (e) {
-                            console.log(e);
+                        } catch {
                             await message.channel.send(
                                 `Could not send DM to **${m.user.tag}**`
                             );
                         }
-                } catch {
+
+                    if (!booleanFlags.has("-d")) await m.ban({ reason });
+
+                    if (booleanFlags.has("-S")) {
+                        await message.guild?.members.unban(m.user);
+                        client.commands.get("clear")?.callback({
+                            message,
+                            args: ["100", "-u", m.id],
+                            client,
+                            locale,
+                            text,
+                        });
+                    }
+                } catch (e) {
+                    console.log(e);
+
                     members.splice(i, 1);
                     if (!booleanFlags.has("-s"))
                         await message.channel.send(`Could not ban **${m.user.tag}**`);
@@ -193,7 +201,7 @@ ${prefix}${this.name}
             })
         );
 
-        if (!members.length) return;
+        if (!members.length) return message.channel.send(`Could not find any users to ban`);
 
         if (booleanFlags.has("-s")) return;
 

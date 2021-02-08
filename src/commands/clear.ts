@@ -31,6 +31,10 @@ const options: {
         alias: "-t",
         message: "Clear all messages sent within the time specified",
     },
+    "--silent": {
+        alias: "-s",
+        message: "Clears messages silently; does not display output",
+    },
     "--help": {
         alias: "-h",
         message: "Displays this nice little help message",
@@ -104,7 +108,9 @@ ${prefix}${this.name}
                         return message.channel.send(
                             `A user is required when using the \`user\` flag.`
                         );
-                    const user = client.users.cache.get(args[index + 1].match(/(\d{18})/)![0]);
+                    const user =
+                        client.users.cache.get(args[index + 1].match(/(\d{18})/)![0]) ||
+                        (await client.users.fetch(args[index + 1]));
                     if (!user) return message.channel.send(`Could not find that user.`);
                     const messages = new Collection(
                         Array.from(
@@ -117,8 +123,11 @@ ${prefix}${this.name}
                     );
                     const count = messages.size;
                     await message.channel.bulkDelete(messages);
+
+                    if (booleanFlags.has("-s")) return;
+
                     const done = await message.channel.send(
-                        `${count} message${count !== 1 ? "s" : ""} w${
+                        `**${count}** message${count !== 1 ? "s" : ""} w${
                             count !== 1 ? "ere" : "as"
                         } deleted.`
                     );
@@ -147,8 +156,10 @@ ${prefix}${this.name}
 
                     await message.channel.bulkDelete(messages);
 
+                    if (booleanFlags.has("-s")) return;
+
                     const done = await message.channel.send(
-                        `${count} message${count !== 1 ? "s" : ""} w${
+                        `**${count}** message${count !== 1 ? "s" : ""} w${
                             count !== 1 ? "ere" : "as"
                         } deleted.`
                     );
@@ -182,8 +193,10 @@ ${prefix}${this.name}
 
                     await message.channel.bulkDelete(messages);
 
+                    if (booleanFlags.has("-s")) return;
+
                     const done = await message.channel.send(
-                        `${count} message${count !== 1 ? "s" : ""} w${
+                        `**${count}** message${count !== 1 ? "s" : ""} w${
                             count !== 1 ? "ere" : "as"
                         } deleted.`
                     );
@@ -213,8 +226,10 @@ ${prefix}${this.name}
 
                     await message.channel.bulkDelete(messages);
 
+                    if (booleanFlags.has("-s")) return;
+
                     const done = await message.channel.send(
-                        `${count} message${count !== 1 ? "s" : ""} w${
+                        `**${count}** message${count !== 1 ? "s" : ""} w${
                             count !== 1 ? "ere" : "as"
                         } deleted.`
                     );
@@ -225,8 +240,10 @@ ${prefix}${this.name}
 
         await message.channel.bulkDelete(amount);
 
+        if (booleanFlags.has("-s")) return;
+
         const done = await message.channel.send(
-            `${amount} message${amount !== 1 ? "s" : ""} w${
+            `**${amount}** message${amount !== 1 ? "s" : ""} w${
                 amount !== 1 ? "ere" : "as"
             } deleted.`
         );
