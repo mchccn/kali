@@ -12,23 +12,23 @@ const options: {
 } = {
     "--name": {
         alias: "-n",
-        message: "Bans all users whose name has the specified word in",
+        message: "Kicks all users whose name has the specified word in",
     },
     "--regex": {
         alias: "-r",
-        message: "Bans all users whose name match the regex",
+        message: "Kicks all users whose name match the regex",
     },
     "--silent": {
         alias: "-s",
-        message: "Bans users silently; does not DM them or displays result",
+        message: "Kicks users silently; does not DM them or displays result",
     },
     "--soft": {
         alias: "-S",
-        message: "Effectively kicks users and clears their messages",
+        message: "Kicks users and clears their messages",
     },
     "--hard": {
         alias: "-H",
-        message: "Bans users and appends your custom message to the DM",
+        message: "Kicks users and appends your custom message to the DM",
     },
     "--help": {
         alias: "-h",
@@ -36,12 +36,12 @@ const options: {
     },
     "--dev": {
         alias: "-d",
-        message: "For testing purposes; does not ban",
+        message: "For testing purposes; does not kick",
     },
 };
 
 export default {
-    name: "ban",
+    name: "kick",
     args: true,
     usage: "[options] <arguments>",
     async callback(this: Command, { message, args, client }) {
@@ -82,7 +82,7 @@ ${prefix}${this.name}
     )}
     
     DEFAULT:
-        Bans users by mention or id with an optional reason
+        Kicks users by mention or id with an optional reason
 \`\`\`
 `);
                 case "name":
@@ -148,19 +148,21 @@ ${prefix}${this.name}
                 )
                 .filter((arg) => !/--?\w+/.test(arg))
                 .join(" ") || "No reason specified";
+
         await Promise.all(
             members.map(async (m, i) => {
                 try {
-                    if (!booleanFlags.has("-d")) await m.ban({ reason });
+                    if (!booleanFlags.has("-d")) await m.kick(reason);
 
-                    if (booleanFlags.has("-S")) await message.guild?.members.unban(m.user);
+                    if (booleanFlags.has("-S")) {
+                    }
 
                     if (!booleanFlags.has("-s"))
                         try {
                             const dm = await m.createDM(true);
                             await client.users.cache.get(m.id)?.createDM();
                             await dm.send(
-                                `You have been banned from **${
+                                `You have been kicked from **${
                                     message.guild?.name
                                 }** for \`${reason}\`${
                                     booleanFlags.has("-H")
@@ -185,7 +187,7 @@ ${prefix}${this.name}
                 } catch {
                     members.splice(i, 1);
                     if (!booleanFlags.has("-s"))
-                        await message.channel.send(`Could not ban **${m.user.tag}**`);
+                        await message.channel.send(`Could not kick **${m.user.tag}**`);
                 }
             })
         );
@@ -196,10 +198,10 @@ ${prefix}${this.name}
 
         return message.channel.send(
             new Embed()
-                .setTitle(`Banned ${members.length} user${members.length !== 1 ? "s" : ""}`)
+                .setTitle(`Kicked ${members.length} user${members.length !== 1 ? "s" : ""}`)
                 .addField("Reason", `\`${reason}\``)
                 .setDescription(
-                    `**Banned users:**\n${members.map((m) => `${m.user.tag}`).join("\n")}`
+                    `**Kicked users:**\n${members.map((m) => `${m.user.tag}`).join("\n")}`
                 )
         );
     },
