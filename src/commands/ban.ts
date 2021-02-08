@@ -66,7 +66,7 @@ export default {
         for (const { flag, index } of flags) {
             switch (flag) {
                 case "help":
-                case "h":
+                case "h": {
                     return message.channel.send(`
 \`\`\`
 ${prefix}${this.name}
@@ -85,8 +85,9 @@ ${prefix}${this.name}
         Bans users by mention or id with an optional reason
 \`\`\`
 `);
+                }
                 case "name":
-                case "n":
+                case "n": {
                     if (!args[index + 1])
                         return message.channel.send(
                             `A name is required when using the \`name\` flag.`
@@ -100,8 +101,9 @@ ${prefix}${this.name}
                             .array()!
                     );
                     break;
+                }
                 case "regex":
-                case "r":
+                case "r": {
                     if (!args[index + 1])
                         return message.channel.send(
                             `A regex is required when using the \`regex\` flag.`
@@ -122,6 +124,7 @@ ${prefix}${this.name}
                             .array()!
                     );
                     break;
+                }
             }
         }
 
