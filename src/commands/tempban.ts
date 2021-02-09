@@ -218,7 +218,7 @@ ${prefix}${this.name}
                         await message.guild?.members.unban(m.id, "Temporary ban over");
                     } catch {}
                 });
-            });
+            }, time);
 
         if (booleanFlags.has("-s")) return;
 
