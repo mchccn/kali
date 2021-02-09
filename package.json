@@ -15,9 +15,11 @@
         "@aeroware/aeroclient": "^1.9.7",
         "@aeroware/discord-utils": "^1.2.2",
         "@types/ms": "^0.7.31",
+        "@types/node-fetch": "^2.5.8",
         "discord.js": "^12.5.1",
         "dotenv": "^8.2.0",
         "ms": "^2.1.3",
+        "node-fetch": "^2.6.1",
         "words-to-numbers-ordinal": "^1.2.1"
     }
 }

@@ -177,6 +177,10 @@ export default {
                     time: 120000,
                 });
             }
+            default:
+                return message.channel.send(
+                    `The valid sections are \`roles\`, \`channels\`, and \`members\`.`
+                );
         }
         return;
     },
