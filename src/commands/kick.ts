@@ -71,12 +71,14 @@ ${prefix}${this.name}
     SYNTAX:
         ${prefix}${this.name} ${this.usage}
 
-    OPTIONS:${Object.keys(options).map(
-        (flag) =>
-            `\n        ${`${flag}, ${options[flag].alias}`.padEnd(16, " ")}${
-                options[flag].message
-            }`
-    )}
+    OPTIONS:${Object.keys(options)
+        .map(
+            (flag) =>
+                `\n        ${`${flag}, ${options[flag].alias}`.padEnd(16, " ")}${
+                    options[flag].message
+                }`
+        )
+        .join("")}
     
     DEFAULT:
         Kicks users by mention or id with an optional reason

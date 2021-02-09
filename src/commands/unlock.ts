@@ -1,4 +1,5 @@
 import { Command } from "@aeroware/aeroclient/dist/types";
+import prefix from "..";
 import getFlags from "../utils/getFlags";
 
 const options: {
@@ -45,6 +46,29 @@ export default {
 
         for (const { flag, index } of flags) {
             switch (flag) {
+                case "help":
+                case "h": {
+                    return message.channel.send(`
+\`\`\`
+${prefix}${this.name}
+
+    SYNTAX:
+        ${prefix}${this.name} ${this.usage}
+
+    OPTIONS:${Object.keys(options)
+        .map(
+            (flag) =>
+                `\n        ${`${flag}, ${options[flag].alias}`.padEnd(16, " ")}${
+                    options[flag].message
+                }`
+        )
+        .join("")}
+    
+    DEFAULT:
+        Unlocks the channel
+\`\`\`
+`);
+                }
                 case "category":
                 case "c":
                     const cat = message.guild?.channels.cache.get(args[index + 1]);

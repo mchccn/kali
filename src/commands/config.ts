@@ -51,12 +51,14 @@ ${prefix}${this.name}
     SYNTAX:
         ${prefix}${this.name} ${this.usage}
 
-    OPTIONS:${Object.keys(options).map(
-        (flag) =>
-            `\n        ${`${flag}, ${options[flag].alias}`.padEnd(16, " ")}${
-                options[flag].message
-            }`
-    )}
+    OPTIONS:${Object.keys(options)
+        .map(
+            (flag) =>
+                `\n        ${`${flag}, ${options[flag].alias}`.padEnd(16, " ")}${
+                    options[flag].message
+                }`
+        )
+        .join("")}
     
     DEFAULT:
         No default action
@@ -175,7 +177,7 @@ ${prefix}${this.name}
                                                             f2 ? utils.formatMacroCase(f2) : ""
                                                         }`
                                                 )
-                                                .join("\n")}\`\`\``
+                                                .join("")}\`\`\``
                                         )
                                         .addField("ID", role.id, true)
                                         .addField(
@@ -305,7 +307,7 @@ ${prefix}${this.name}
                                                             ? `🔊 ${child.name}`
                                                             : `<#${child.id}>`
                                                     )
-                                                    .join("\n")}`
+                                                    .join("")}`
                                             )
                                             .addField("Type", channel.type, true)
                                             .addField(

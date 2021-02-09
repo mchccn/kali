@@ -1,5 +1,6 @@
 import { Command } from "@aeroware/aeroclient/dist/types";
 import { User } from "discord.js";
+import prefix from "..";
 import Embed from "../utils/Embed";
 import getFlags from "../utils/getFlags";
 
@@ -34,6 +35,34 @@ export default {
         const booleanFlags = new Set(
             flags.map(({ flag }) => options[`--${flag}`]?.alias || `-${flag}`)
         );
+
+        for (const { flag, index } of flags) {
+            switch (flag) {
+                case "help":
+                case "h": {
+                    return message.channel.send(`
+\`\`\`
+${prefix}${this.name}
+
+    SYNTAX:
+        ${prefix}${this.name} ${this.usage}
+
+    OPTIONS:${Object.keys(options)
+        .map(
+            (flag) =>
+                `\n        ${`${flag}, ${options[flag].alias}`.padEnd(16, " ")}${
+                    options[flag].message
+                }`
+        )
+        .join("")}
+    
+    DEFAULT:
+        No default action
+\`\`\`
+`);
+                }
+            }
+        }
 
         const users: User[] = [];
 
