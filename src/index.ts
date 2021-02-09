@@ -18,6 +18,7 @@ const prefix = ">>";
                 responses: {
                     usage: `${prefix}$COMMAND $USAGE`,
                 },
+                staff: ["508442553754845184", "564930157371195437"],
             },
             {
                 ws: {

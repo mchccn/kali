@@ -113,7 +113,7 @@ export default {
 
                 const pages = fields.map((channels, i) =>
                     new Embed()
-                        .setTitle("Roles")
+                        .setTitle("Channels")
                         .setFooter(`page ${i + 1} out of ${fields.length}`)
                         .setDescription(channels.join("\n"))
                         .setColor(color)
@@ -161,7 +161,7 @@ export default {
 
                 const pages = fields.map((members, i) =>
                     new Embed()
-                        .setTitle("Roles")
+                        .setTitle("Members")
                         .setFooter(`page ${i + 1} out of ${fields.length}`)
                         .setDescription(members.join("\n"))
                         .setColor(color)
@@ -179,7 +179,7 @@ export default {
             }
             default:
                 return message.channel.send(
-                    `The valid sections are \`roles\`, \`channels\`, and \`members\`.`
+                    `The valid sections are \`roles\`, \`channels\` and \`members\`.`
                 );
         }
         return;
