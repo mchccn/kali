@@ -12,7 +12,7 @@ const options: {
 } = {
     "--silent": {
         alias: "-s",
-        message: "Unbans users silently; does not DM them or displays output",
+        message: "Unbans users silently; does not display output",
     },
     "--help": {
         alias: "-h",
