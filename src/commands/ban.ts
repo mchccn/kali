@@ -55,7 +55,7 @@ export default {
 
         for (const arg of args) {
             if (/\d{18}/.test(arg)) {
-                const member = message.guild!.members.cache.get(arg.match(/(\d{18})/)![0]);
+                const member = await message.guild!.members.fetch(arg.match(/(\d{18})/)![0]);
                 if (member && member.id !== client.user?.id) members.push(member);
             } else break;
         }
@@ -157,7 +157,7 @@ ${prefix}${this.name}
                     if (!booleanFlags.has("-s"))
                         try {
                             const dm = await m.createDM(true);
-                            await client.users.cache.get(m.id)?.createDM();
+                            await (await client.users.fetch(m.id))?.createDM();
                             await dm.send(
                                 `You have been ${
                                     booleanFlags.has("-S") ? "soft" : ""

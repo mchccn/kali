@@ -116,7 +116,7 @@ ${prefix}${this.name}
                                 return;
                             }
                             const id = args[2].match(/(\d{18})/)![0];
-                            const role = message.guild?.roles.cache.get(id);
+                            const role = await message.guild?.roles.fetch(id);
                             if (!role) {
                                 if (!booleanFlags.has("-s"))
                                     message.channel.send(`Role not found`);
@@ -138,7 +138,7 @@ ${prefix}${this.name}
                                 return;
                             }
                             const id = args[2].match(/(\d{18})/)![0];
-                            const role = message.guild?.roles.cache.get(id);
+                            const role = await message.guild?.roles.fetch(id);
                             if (!role) {
                                 if (!booleanFlags.has("-s"))
                                     message.channel.send(`Role not found`);
@@ -436,12 +436,43 @@ ${prefix}${this.name}
                                 if (!booleanFlags.has("-s"))
                                     return message.channel.send(`Emoji deletion failed`);
                             }
+                        case "info":
+                            if (!args[2]) {
+                                if (!booleanFlags.has("-s"))
+                                    message.channel.send(`Please provide the emoji`);
+                                return;
+                            }
+                            if (!/\d{18}/.test(args[2])) {
+                                if (!booleanFlags.has("-s"))
+                                    message.channel.send(`Please provide a valid emoji`);
+                                return;
+                            }
+                            const emoji = client.emojis.cache.get(
+                                args[2].match(/(\d{18})/)![0]
+                            );
+                            if (!emoji) {
+                                if (!booleanFlags.has("-s"))
+                                    message.channel.send(`Emoji not found`);
+                                return;
+                            }
+                            if (!booleanFlags.has("-s"))
+                                return message.channel.send(
+                                    new Embed()
+                                        .setTitle(emoji.name)
+                                        .setThumbnail(emoji.url)
+                                        .addField("ID", emoji.id)
+                                        .addField(
+                                            "Author",
+                                            emoji.author ? emoji.author.tag : "N/A"
+                                        )
+                                );
                         default:
                             if (!booleanFlags.has("-s"))
                                 return message.channel.send(
                                     `The valid subsections are ${utils.formatList([
                                         "`create`",
                                         "`delete`",
+                                        "`info`",
                                     ])}`
                                 );
                     }

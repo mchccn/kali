@@ -67,7 +67,7 @@ export default {
         let user = message.author;
 
         if (/\d{18}/.test(args[0])) {
-            user = client.users.cache.get(args[0].match(/(\d{18})/)![0])!;
+            user = await client.users.fetch(args[0].match(/(\d{18})/)![0])!;
             if (!user) return message.channel.send(`User not found`);
         }
 
