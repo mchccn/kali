@@ -240,7 +240,7 @@ ${prefix}${this.name}
             }
         }
 
-        await message.channel.bulkDelete(amount);
+        if (!booleanFlags.has("-d")) await message.channel.bulkDelete(amount);
 
         if (booleanFlags.has("-s")) return;
 
