@@ -99,7 +99,8 @@ ${prefix}${this.name}
                         )
                     );
 
-                    return message.channel.send(`Unlocked category ${cat.name}`);
+                    if (!booleanFlags.has("-s"))
+                        return message.channel.send(`Unlocked category ${cat.name}`);
             }
         }
 

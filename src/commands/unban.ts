@@ -89,6 +89,8 @@ ${prefix}${this.name}
 
         if (booleanFlags.has("-s")) return;
 
+        if (!users.length) return message.channel.send(`Could not find any users to unban`);
+
         return message.channel.send(
             new Embed()
                 .setTitle(`Unbanned ${users.length} user${users.length !== 1 ? "s" : ""}`)

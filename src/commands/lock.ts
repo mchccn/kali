@@ -104,7 +104,8 @@ ${prefix}${this.name}
                         )
                     );
 
-                    return message.channel.send(`Locked category ${cat.name}`);
+                    if (!booleanFlags.has("-s"))
+                        return message.channel.send(`Locked category ${cat.name}`);
                 case "time":
                 case "t":
                     const time = Math.max(Math.min(ms(args[index + 1]), 86400000), 60000);
@@ -137,9 +138,10 @@ ${prefix}${this.name}
                         });
                     }, time);
 
-                    return message.channel.send(
-                        `Locked channel <#${channel.id}> for ${ms(time, { long: true })}`
-                    );
+                    if (!booleanFlags.has("-s"))
+                        return message.channel.send(
+                            `Locked channel <#${channel.id}> for ${ms(time, { long: true })}`
+                        );
             }
         }
 
