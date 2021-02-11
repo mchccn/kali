@@ -82,7 +82,7 @@ ${prefix}${this.name}
             }
         }
 
-        const time = ms(args[members.length]);
+        const time = ms(args[members.length] || "");
         if (!time && !booleanFlags.has("-f"))
             return message.channel.send("Please provide a valid time");
 

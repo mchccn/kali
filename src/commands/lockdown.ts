@@ -88,19 +88,22 @@ ${prefix}${this.name}
         .join("")}
     
     DEFAULT:
-        Puts the server in lockdown
+        Puts the server in lockdown for one day
 \`\`\`
 `);
                 }
                 case "ban":
                 case "b":
                     ban = true;
+                    break;
                 case "mute":
                 case "m":
                     mute = true;
+                    break;
                 case "time":
                 case "t":
                     time = Math.min(Math.max(ms(args[index + 1]), 60000), 86400000);
+                    break;
             }
         }
 
@@ -160,7 +163,7 @@ ${prefix}${this.name}
             lockdown.set(message.guild?.id!, {
                 defense: ban ? "ban" : mute ? "mute" : "kick",
                 start: Date.now(),
-                time,
+                time: time || 86400000,
                 message: message.channel.id + message.id,
             });
 
@@ -197,7 +200,17 @@ async function lockdownInspect(member: GuildMember, client: AeroClient) {
             case "ban":
                 return member.ban();
             case "mute":
-                return;
+                const msg = await ((await client.channels.fetch(
+                    lock.message.slice(0, 18)
+                )) as TextChannel).messages.fetch(lock.message.slice(18));
+
+                return client.commands.get("mute")?.callback({
+                    message: msg,
+                    args: [member.id, "-frs"],
+                    client,
+                    locale: "",
+                    text: "",
+                });
         }
     }
 
