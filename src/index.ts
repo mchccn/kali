@@ -1,5 +1,5 @@
 import AeroClient from "@aeroware/aeroclient";
-import { Intents } from "discord.js";
+import { Intents, TextChannel } from "discord.js";
 import { config as dotenv } from "dotenv";
 
 dotenv();
@@ -27,6 +27,17 @@ const client = new AeroClient(
 
 client.use(({ message }, next) => {
     if (!message.guild || !message.member!.hasPermission("ADMINISTRATOR")) return next(true);
+});
+
+process.on("unhandledRejection", async (err) => {
+    ((client.channels.cache.get("806540623850373180") ||
+        (await client.channels.fetch("806540623850373180"))) as TextChannel).send(
+        //@ts-ignore
+        (err && (err.stack || err.message)) || "An error occured.",
+        {
+            code: true,
+        }
+    );
 });
 
 export { client };
