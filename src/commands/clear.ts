@@ -100,7 +100,7 @@ ${prefix}${this.name}
                     const channel = await message.channel.clone();
                     await message.channel.delete();
                     const nuked = await channel.send(
-                        `Channel <#${channel.name}> has been nuked.`
+                        `Channel <#${channel.id}> has been nuked.`
                     );
                     return nuked.delete({ timeout: 5000 });
                 }
