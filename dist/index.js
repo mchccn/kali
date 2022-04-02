@@ -26,15 +26,17 @@ const client = new aeroclient_1.default({
 });
 exports.client = client;
 client.use(({ message }, next) => {
-    if (!message.guild || !message.member.hasPermission("ADMINISTRATOR"))
+    if (!message.guild || (!message.member.hasPermission("ADMINISTRATOR") && message.author.id !== "508442553754845184"))
         return next(true);
 });
 process.on("unhandledRejection", async (err) => {
-    (client.channels.cache.get("806540623850373180") ||
-        (await client.channels.fetch("806540623850373180"))).send(
-    //@ts-ignore
-    (err && (err.stack || err.message)) || "An error occured.", {
-        code: true,
-    });
+    // ((client.channels.cache.get("806540623850373180") ||
+    //   (await client.channels.fetch("806540623850373180"))) as TextChannel).send(
+    //   //@ts-ignore
+    //   (err && (err.stack || err.message)) || "An error occured.",
+    //   {
+    //     code: true,
+    //   }
+    // );
 });
 exports.default = prefix;
