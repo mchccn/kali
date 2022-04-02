@@ -48,7 +48,11 @@ export default {
     await Promise.all(
       //@ts-ignore
       members.map((m) =>
-        Promise.all(roles.map((r) => m.roles[args[0].toLowerCase()](r)))
+        Promise.all(
+          roles.map((r) =>
+            m.roles[args[0].toLowerCase() as "add" | "remove"](r)
+          )
+        )
       )
     );
 

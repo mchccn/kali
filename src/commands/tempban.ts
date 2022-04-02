@@ -1,5 +1,5 @@
 import { Command } from "@aeroware/aeroclient/dist/types";
-import { GuildMember } from "discord.js";
+import { GuildMember, Message } from "discord.js";
 import ms from "ms";
 import prefix from "..";
 import Embed from "../utils/Embed";
@@ -165,7 +165,7 @@ ${prefix}${this.name}
 
     await Promise.all(
       members.map(async (m, i) => {
-        let notif: Message;
+        let notif: Message | undefined;
 
         try {
           if (!booleanFlags.has("-s"))
