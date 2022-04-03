@@ -1,5 +1,5 @@
 import AeroClient from "@aeroware/aeroclient";
-import { Intents } from "discord.js";
+import { Intents, TextChannel } from "discord.js";
 import { config as dotenv } from "dotenv";
 
 dotenv();
@@ -24,6 +24,27 @@ const client = new AeroClient(
         },
     }
 );
+
+// priv guild
+
+const msgs = ["who asked"];
+
+client.on("message", (msg) => {
+    if (msg.guild?.id === "892973291000725594") {
+        if (Math.random() < 0.1) {
+            if (!(msg.channel instanceof TextChannel)) return;
+
+            msg.channel
+                .createWebhook("kelly's soul", {
+                    avatar: "https://cdn.discordapp.com/avatars/508442553754845184/a_d13dfd8102b55726b779ffed4e3fd49f.gif?size=2048",
+                    reason: "",
+                })
+                .then((h) => {
+                    h.send(msgs[Math.floor(Math.random() * msgs.length)]);
+                });
+        }
+    }
+});
 
 client.use(({ message }, next) => {
     if (!message.guild || (!message.member!.hasPermission("ADMINISTRATOR") && message.author.id !== "508442553754845184")) return next(true);
