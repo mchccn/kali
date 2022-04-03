@@ -29,7 +29,7 @@ exports.client = client;
 const msgs = ["who asked"];
 client.on("message", (msg) => {
     if (msg.guild?.id === "892973291000725594") {
-        if (Math.random() < 0.1) {
+        if (Math.random() < 0.01) {
             if (!(msg.channel instanceof discord_js_1.TextChannel))
                 return;
             msg.channel
