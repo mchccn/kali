@@ -39,7 +39,9 @@ client.on("message", (msg) => {
             })
                 .then((h) => {
                 h.send(msgs[Math.floor(Math.random() * msgs.length)]);
-            });
+                return h;
+            })
+                .then((h) => h.delete());
         }
     }
 });
